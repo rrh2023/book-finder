@@ -6,6 +6,7 @@ function App() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [searched, setSearched] = useState(false)
 
 
   const LAMBDA_URL = "https://cdvkusfgfqapngxwgfhubhgzdm0lcxip.lambda-url.us-east-2.on.aws/"
@@ -66,6 +67,7 @@ function App() {
   };
 
   const clearBooks = async () => {
+    setSearched(false)
     setLoading(false);
     setBooks([]);
     setError('');
@@ -74,6 +76,7 @@ function App() {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
+      setSearched(true)
       e.preventDefault();
       searchBooks();
     }
@@ -150,7 +153,7 @@ function App() {
           </div>
         )}
 
-        {!loading && books.length === 0 && description && !error && (
+        {!loading && searched && books.length === 0 && description && !error && (
           <div className="bg-white rounded-xl p-5 text-center text-gray-600">
             No books found. Try a different description.
           </div>
