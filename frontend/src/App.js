@@ -8,7 +8,7 @@ function App() {
   const [error, setError] = useState('');
 
 
-  const LAMBDA_URL = process.env.REACT_APP_API_KEY
+  const LAMBDA_URL = "https://cdvkusfgfqapngxwgfhubhgzdm0lcxip.lambda-url.us-east-2.on.aws/"
 
   const searchBooks = async () => {
     if (!description.trim()) {
