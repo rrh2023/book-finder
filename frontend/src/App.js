@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from "axios"
 
 function App() {
   const [description, setDescription] = useState('');
@@ -6,7 +7,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Replace with your Lambda Function URL
+
   const LAMBDA_URL = 'https://cdvkusfgfqapngxwgfhubhgzdm0lcxip.lambda-url.us-east-2.on.aws/';
 
   const searchBooks = async () => {
@@ -41,7 +42,35 @@ function App() {
     } finally {
       setLoading(false);
     }
+
+    try {
+    const response = await axios.post(
+      LAMBDA_URL,
+      //
+      { description },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = response.data;
+    setBooks(data.books || []);
+  } catch (err) {
+    console.error("Error:", err);
+    setError("Failed to search for books. Please try again.");
+  } finally {
+    setLoading(false);
+  }
   };
+
+  const clearBooks = async () => {
+    setLoading(false);
+    setBooks([]);
+    setError('');
+    setDescription('')
+  }
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -88,6 +117,14 @@ function App() {
           >
             {loading ? 'Searching...' : 'Find Books'}
           </button>
+          {books.length > 0 && <button
+            onClick={clearBooks}
+            disabled={loading}
+            className="w-full py-4 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-lg font-semibold text-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
+          >
+            Clear Books
+          </button>}
+          
         </div>
 
         {/* Loading State */}
