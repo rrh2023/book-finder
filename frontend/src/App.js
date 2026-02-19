@@ -36,10 +36,18 @@ function App() {
       }
 
       const data = await response.json();
-      setBooks(data.books || []);
+      if ("message" in data){
+        throw new Error('No books found');
+      }
+      setBooks(data.books);
     } catch (err) {
       console.error('Error:', err);
-      setError('Failed to search for books. Please try again.');
+      if(err.message == 'Failed to fetch books'){
+        setError('Failed to search for books. Please try again.');
+      }else{
+        setError('No books found.');
+      }
+      
     } finally {
       setLoading(false);
     }
@@ -57,7 +65,7 @@ function App() {
     );
 
     const data = response.data;
-    setBooks(data.books || []);
+    setBooks(data.books);
   } catch (err) {
     console.error("Error:", err);
     setError("Failed to search for books. Please try again.");
