@@ -9,18 +9,19 @@ def lambda_handler(event, context):
     with AI-powered query enhancement
     """
     
-    # Handle CORS preflight
-    if event.get('httpMethod') == 'OPTIONS':
+    method = event.get('httpMethod') or event.get('requestContext', {}).get('http', {}).get('method', '')
+
+    if method == 'OPTIONS':
         return {
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS'
+                'Access-Control-Allow-Methods': 'POST, OPTIONS',
             },
             'body': ''
         }
-    
+        
     try:
         # Parse the request body
         body = json.loads(event.get('body', '{}'))

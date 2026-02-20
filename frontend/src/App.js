@@ -9,9 +9,10 @@ function App() {
   const [searched, setSearched] = useState(false)
 
 
-  const LAMBDA_URL = "https://cdvkusfgfqapngxwgfhubhgzdm0lcxip.lambda-url.us-east-2.on.aws/"
+  const LAMBDA_URL = "https://24zyovdbg3.execute-api.us-east-2.amazonaws.com/default/book-finder-api"
 
   const searchBooks = async () => {
+    setSearched(true)
     if (!description.trim()) {
       setError('Please enter a book description');
       setTimeout(() => setError(''), 5000);
@@ -23,52 +24,20 @@ function App() {
     setError('');
 
     try {
-      const response = await fetch(LAMBDA_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ description }),
-      });
+    const { data } = await axios.post(LAMBDA_URL, { description });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch books');
-      }
-
-      const data = await response.json();
-      if ("message" in data){
-        throw new Error('No books found');
-      }
-      setBooks(data.books);
-    } catch (err) {
-      console.error('Error:', err);
-      if(err.message == 'Failed to fetch books'){
-        setError('Failed to search for books. Please try again.');
-      }else{
-        setError('No books found.');
-      }
-      
-    } finally {
-      setLoading(false);
+    if ("message" in data) {
+      throw new Error('No books found');
     }
 
-    try {
-    const response = await axios.post(
-      LAMBDA_URL,
-      //
-      { description },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const data = response.data;
     setBooks(data.books);
   } catch (err) {
-    console.error("Error:", err);
-    setError("Failed to search for books. Please try again.");
+    console.error('Error:', err);
+    if (axios.isAxiosError(err)) {
+      setError('Failed to search for books. Please try again.');
+    } else {
+      setError('No books found.');
+    }
   } finally {
     setLoading(false);
   }
@@ -131,7 +100,7 @@ function App() {
           {books.length > 0 && <button
             onClick={clearBooks}
             disabled={loading}
-            className="w-full py-4 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-lg font-semibold text-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
+            className="w-full mt-3 py-4 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-lg font-semibold text-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
           >
             Clear Books
           </button>}
