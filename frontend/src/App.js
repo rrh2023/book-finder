@@ -64,7 +64,7 @@ function App() {
       <div className="max-w-4xl mx-auto pt-10">
         {/* Header */}
         <header className="text-center text-white mb-10">
-          <h1 className="text-5xl font-bold mb-3">📚 Book Finder</h1>
+          <h1 className="text-5xl font-bold mb-3">📚 BookID</h1>
           <p className="text-xl opacity-90">
             Describe the book you're looking for and discover your next read
           </p>
