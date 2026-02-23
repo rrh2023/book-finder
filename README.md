@@ -1,6 +1,6 @@
 ﻿# BookID
 
-Discover your next favorite book with AI-powered recommendations.
+Discover new books with AI-powered recommendations based on any given description.
 
 https://aws-book-finder-app.netlify.app/
 
